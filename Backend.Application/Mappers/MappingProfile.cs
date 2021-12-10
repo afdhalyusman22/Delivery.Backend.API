@@ -11,8 +11,14 @@ namespace Backend.Application.Mappers
             CreateMap<OrderDetail, OrderPostDTO> ();
             CreateMap<OrderPostDTO, OrderDetail>();
 
-            CreateMap<Order, OrdetListDTO>();
-            CreateMap<OrdetListDTO, Order>();
+            CreateMap<Order, OrderDTO>();
+            CreateMap<OrderDTO, Order>();
+
+            CreateMap<OrderDetail, OrderDetailDTO>();
+            CreateMap<OrderDetailDTO, OrderDetail>();
+
+            CreateMap<OrderLog, OrderLogDTO>();
+            CreateMap<OrderLogDTO, OrderLog>();
         }
     }
 }

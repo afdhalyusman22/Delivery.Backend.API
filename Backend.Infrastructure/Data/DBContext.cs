@@ -164,6 +164,7 @@ namespace Backend.Infrastructure.Data
                     .IsUnicode(false);
 
                 entity.Property(e => e.Email).HasMaxLength(256);
+
                 entity.Property(e => e.Fullname).HasMaxLength(256);
 
                 entity.Property(e => e.LastLoginDate).HasColumnType("datetime");
@@ -173,6 +174,8 @@ namespace Backend.Infrastructure.Data
                 entity.Property(e => e.ModifiedBy).HasMaxLength(500);
 
                 entity.Property(e => e.PhoneNumber).HasMaxLength(15);
+
+                entity.Property(e => e.Role).HasMaxLength(50);
 
                 entity.Property(e => e.UserName)
                     .IsRequired()

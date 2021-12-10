@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Backend.Application.Mappers;
-
+using Newtonsoft.Json;
 using Backend.Core.Repositories.Base;
 using Backend.Infrastructure.Repositories.Base;
 using Backend.Core;

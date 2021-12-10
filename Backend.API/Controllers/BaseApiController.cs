@@ -29,21 +29,21 @@ namespace Backend.API.Controllers
         }
 
         [ExcludeFromCodeCoverage]
-        [HttpGet("GetUsername")]
-        public string GetUsername()
+        [HttpGet("GetRole")]
+        public string GetRole()
         {
-            string userName = null;
+            string role = null;
             try
             {
                 if (User.Claims.Any())
-                    userName = User.Claims.FirstOrDefault(x => x.Type == "initialName").Value.Split("|")[1];
+                    role = User.Claims.FirstOrDefault(x => x.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role").Value;
 
             }
             catch (Exception)
             {
 
             }
-            return userName;
+            return role;
         }
     }
 }

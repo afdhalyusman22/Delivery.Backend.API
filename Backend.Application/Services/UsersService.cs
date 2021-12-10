@@ -50,6 +50,7 @@ namespace Backend.Application.Services
                             new Claim(JwtRegisteredClaimNames.UniqueName, user.Fullname),
                             new Claim("initialName", user.UserName),
                             new Claim("userId", user.Fullname + "|" + user.Id),
+                            new Claim("role", user.Role),
                             new Claim(JwtRegisteredClaimNames.Email, user.Email),
                             };
 
