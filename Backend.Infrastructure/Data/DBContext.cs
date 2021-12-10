@@ -30,6 +30,7 @@ namespace Backend.Infrastructure.Data
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<OrderLog> OrderLogs { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Status> Statuses { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -143,6 +144,29 @@ namespace Backend.Infrastructure.Data
                 entity.Property(e => e.ModifiedBy).HasMaxLength(500);
 
                 entity.Property(e => e.Status)
+                    .IsRequired()
+                    .HasMaxLength(500);
+            });
+
+            modelBuilder.Entity<Status>(entity =>
+            {
+                entity.ToTable("Status");
+
+                entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+
+                entity.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasMaxLength(500);
+
+                entity.Property(e => e.DeletedAt).HasColumnType("datetime");
+
+                entity.Property(e => e.DeletedBy).HasMaxLength(500);
+
+                entity.Property(e => e.ModifiedAt).HasColumnType("datetime");
+
+                entity.Property(e => e.ModifiedBy).HasMaxLength(500);
+
+                entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(500);
             });

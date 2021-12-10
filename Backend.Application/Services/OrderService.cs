@@ -29,13 +29,13 @@ namespace Backend.Application.Services
                 OrderDetail orderDetail = mapper.Map<OrderDetail>(post);
                 OrderLog orderLog = new OrderLog
                 {
-                    Status = Status.PickUp
+                    Status = "Order picked up"
                 };
                 Guid orderNumber = Guid.NewGuid();
                 Order order = new Order();
                 order.UserId = userId;
                 order.OrderNo = orderNumber;
-                order.Status = Status.PickUp;
+                order.Status = "Order picked up";
                 order.OrderDetails.Add(orderDetail);
                 order.OrderLogs.Add(orderLog);
 

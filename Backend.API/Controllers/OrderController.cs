@@ -33,7 +33,7 @@ namespace Backend.API.Controllers
         /// </summary>
         /// <param name="post"></param>
         /// <returns></returns>
-        [HttpPost("create")]
+        [HttpPost()]
         public async Task<IActionResult> CreateOrder([FromBody] OrderPostDTO post)
         {
             try
@@ -114,6 +114,56 @@ namespace Backend.API.Controllers
 
                 result = _mapper.Map<List<OrderDTO>>(items);
                 return Requests.Response(this, new ApiStatus(200), result, "");
+
+            }
+            catch (Exception ex)
+            {
+                return Requests.Response(this, new ApiStatus(500), null, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// UPdate Status Order
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPatch("{id:int}")]
+        public async Task<IActionResult> UpdateOrder([FromBody] OrderUpdateDTO post)
+        {
+            try
+            {
+                OrderDTO result = new OrderDTO();
+                Order items = new Order();
+                string role = GetRole();
+                string userId = GetUserIdOnly();
+                if (role == null || userId == null)
+                    return Requests.Response(this, new ApiStatus(401), null, "You dont have acces to get all order");
+                
+                items = await _repository.GetByIdAsync<Order>(post.Id);
+                if (items == null)
+                    return Requests.Response(this, new ApiStatus(404), null, "Order not exist");
+
+                var status = await _repository.GetByIdAsync<Status>(post.Status);
+
+                items.Status = status.Name;
+
+                var u = await _repository.UpdateManyAsync<Order>(items);
+                if (!u.Updated && (u.Message != null))
+                    return Requests.Response(this, new ApiStatus(500), null, u.Message);
+
+                OrderLog orderLog = new OrderLog();
+                orderLog.OrderId = post.Id;
+                orderLog.Status = status.Name;
+
+                var a = await _repository.AddManyAsync<OrderLog>(orderLog);
+                if (!a.Added && (a.Message != null))
+                    return Requests.Response(this, new ApiStatus(500), null, a.Message);
+
+                var commit = await _repository.CommitSync();
+                if (!commit.Commited && (commit.Message != null))
+                    return Requests.Response(this, new ApiStatus(500), null, commit.Message);
+
+                return Requests.Response(this, new ApiStatus(200), null, "Success Update Status Order");
 
             }
             catch (Exception ex)

@@ -56,6 +56,23 @@ namespace Backend.Infrastructure.Repositories.Base
                 }
             }
         }
+        public async Task<(bool Added, string Message)> AddManyAsync<T>(T entity) where T : BaseEntity
+        {
+            try
+            {
+                await _context.Set<T>().AddAsync(entity);
+                return (true, "Success Save Data");
+            }
+            catch (System.Exception ex)
+            {
+                if (ex.InnerException != null) { return (false, "Trouble happened! \n" + ex.Message + "\n" + ex.InnerException.Message); }
+                else
+                {
+                    return (false, "Trouble happened! \n" + ex.Message);
+                }
+            }
+        }
+
 
         public async Task<(bool Deleted, string Message)> DeleteAsync<T>(long id) where T : BaseEntity
         {

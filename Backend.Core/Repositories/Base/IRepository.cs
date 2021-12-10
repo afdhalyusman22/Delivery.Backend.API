@@ -12,6 +12,7 @@ namespace Backend.Core.Repositories.Base
     {
         Task<(bool Commited, string Message)> CommitSync();
         Task<(bool Added, string Message)> AddAsync<T>(T entity) where T : BaseEntity;
+        Task<(bool Added, string Message)> AddManyAsync<T>(T entity) where T : BaseEntity;
         Task<(bool Deleted, string Message)> DeleteAsync<T>(long id) where T : BaseEntity;
         Task<List<T>> ListAsync<T>(int takeMaxRows = 0) where T : BaseEntity;
         Task<List<T>> ListAsync<T>() where T : BaseEntity;
