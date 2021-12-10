@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Backend.Core.Entities;
 using Backend.Core.Entities.Base;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 #nullable disable
@@ -12,17 +13,22 @@ namespace Backend.Infrastructure.Data
 {
     public partial class DBContext : DbContext
     {
+
+        private readonly IHttpContextAccessor _contextAccessor;
         public DBContext()
         {
         }
 
-        public DBContext(DbContextOptions<DBContext> options)
+        public DBContext(DbContextOptions<DBContext> options, IHttpContextAccessor contextAccessor)
             : base(options)
         {
+
+            _contextAccessor = contextAccessor;
         }
 
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
+        public virtual DbSet<OrderLog> OrderLogs { get; set; }
         public virtual DbSet<User> Users { get; set; }
 
 
@@ -118,6 +124,29 @@ namespace Backend.Infrastructure.Data
                     .HasConstraintName("FK_OrderDetail_Orders");
             });
 
+            modelBuilder.Entity<OrderLog>(entity =>
+            {
+                entity.ToTable("OrderLog");
+
+                entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+
+                entity.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasMaxLength(500);
+
+                entity.Property(e => e.DeletedAt).HasColumnType("datetime");
+
+                entity.Property(e => e.DeletedBy).HasMaxLength(500);
+
+                entity.Property(e => e.ModifiedAt).HasColumnType("datetime");
+
+                entity.Property(e => e.ModifiedBy).HasMaxLength(500);
+
+                entity.Property(e => e.Status)
+                    .IsRequired()
+                    .HasMaxLength(500);
+            });
+
             modelBuilder.Entity<User>(entity =>
             {
                 entity.Property(e => e.Id).HasMaxLength(50);
@@ -169,6 +198,11 @@ namespace Backend.Infrastructure.Data
         {
             var entities = ChangeTracker.Entries().Where(x => x.Entity is BaseEntity && (x.State == EntityState.Added || x.State == EntityState.Modified));
             var currentUsername = "ADMIN";
+
+            if (_contextAccessor != null && _contextAccessor.HttpContext != null && _contextAccessor.HttpContext.User?.Identity?.Name != null)
+            {
+                currentUsername = !string.IsNullOrEmpty(_contextAccessor.HttpContext.User?.Claims.FirstOrDefault(x => x.Type == "userId").Value) ? _contextAccessor.HttpContext.User?.Claims.FirstOrDefault(x => x.Type == "userId").Value : "N/A|0";
+            }
 
             foreach (var entity in entities)
             {

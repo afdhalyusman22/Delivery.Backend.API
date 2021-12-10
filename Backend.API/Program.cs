@@ -1,5 +1,8 @@
+using Backend.Infrastructure.Data;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 
 namespace Backend.API
 {
@@ -7,7 +10,24 @@ namespace Backend.API
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var host = CreateHostBuilder(args).Build();
+
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+
+                try
+                {
+                    var context = services.GetRequiredService<DBContext>();
+                    context.Database.EnsureCreated();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex + " An error occurred seeding the DB.");
+                }
+            }
+            host.Run();
+
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

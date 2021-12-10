@@ -18,6 +18,7 @@ using System;
 using System.Threading.Tasks;
 using Backend.Application.Services;
 using Backend.Application.Interfaces;
+using Microsoft.AspNetCore.Http;
 
 namespace Backend.API
 {
@@ -36,7 +37,8 @@ namespace Backend.API
 
             string connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddControllers();
-            services.AddDbContext<DBContext>(m => m.UseSqlServer(connectionString), ServiceLifetime.Singleton);
+            services.AddDbContext<DBContext>(options =>
+                options.UseSqlServer(connectionString, o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
 
             services.AddAutoMapper(typeof(MappingProfile));
 
@@ -79,8 +81,9 @@ namespace Backend.API
                 };
             });
 
-            services.AddSingleton<IRepository, Repository>();
+            services.AddTransient<IRepository, Repository>();
             services.AddTransient<IUsersService, UsersService>();
+            services.AddTransient<IOrderService, OrderService>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Backend.API", Version = "v1" });
@@ -107,10 +110,12 @@ namespace Backend.API
                     }
                 });
             });
+
+            services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DBContext db)
         {
             if (env.IsDevelopment())
             {
@@ -119,6 +124,7 @@ namespace Backend.API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Backend.API v1"));
             }
 
+            db.Database.EnsureCreated();
             app.UseRouting();
 
             app.UseAuthentication();

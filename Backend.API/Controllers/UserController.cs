@@ -1,5 +1,5 @@
 ﻿using Backend.API.Error;
-using Backend.Application.Dto.User;
+using Backend.Application.Dto;
 using Backend.Application.Interfaces;
 using Backend.Core.Entities;
 using Backend.Core.Repositories.Base;
@@ -13,7 +13,7 @@ namespace Backend.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserController : BaseApiController
     {
         private readonly IUsersService _user;
         private readonly IRepository _repository;
@@ -31,9 +31,14 @@ namespace Backend.API.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var PasswordHash = Others.GenerateHash(users.Password);
+                    var user = await _repository.GetQueryableWithWhereAsync<User>(x => (x.UserName == users.UserName || x.Email == users.UserName));
 
-                    var (Authenticated, Result, Message) = await _user.AuthenticateAsync(users.UserName, PasswordHash);
+                    if (!user.Any())
+                    {
+                        return Requests.Response(this, new ApiStatus(401), null, "Invalid username");
+                    }
+
+                    var (Authenticated, Result, Message) = await _user.AuthenticateAsync(user.FirstOrDefault());
 
                     if (!Authenticated && Message != "")
                         return Requests.Response(this, new ApiStatus(500), Result, Message);

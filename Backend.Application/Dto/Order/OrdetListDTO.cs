@@ -1,24 +1,15 @@
-﻿using Backend.Core.Entities.Base;
+﻿using Backend.Core.Entities;
 using System;
 using System.Collections.Generic;
 
-#nullable disable
-
-namespace Backend.Core.Entities
+namespace Backend.Application.Dto
 {
-    public partial class Order : BaseEntity
+    public class OrdetListDTO
     {
-        public Order()
-        {
-            OrderDetails = new HashSet<OrderDetail>();
-            OrderLogs = new HashSet<OrderLog>();
-        }
-
+        public long Id { get; set; }
         public Guid OrderNo { get; set; }
         public string UserId { get; set; }
         public string Status { get; set; }
-
-        public virtual User User { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public virtual ICollection<OrderLog> OrderLogs { get; set; }
     }

@@ -9,7 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
-using Backend.Application.Dto.User;
+using Backend.Application.Dto;
 using Backend.Application.Interfaces;
 
 namespace Backend.Application.Services
@@ -25,20 +25,10 @@ namespace Backend.Application.Services
             this.configs = _configs;
         }
 
-        public async Task<(bool Authenticated, object Result, string Message)> AuthenticateAsync(string username, string password)
+        public async Task<(bool Authenticated, object Result, string Message)> AuthenticateAsync(User user)
         {
             try
-            {
-                //join
-                var u = await repository.GetQueryableWithWhereAsync<User>(x => (x.UserName == username || x.Email == username));
-
-                // return null if user not found
-                if (!u.Any())
-                {
-                    return (false, null, "Invalid username or password");
-                }
-
-                var user = u.FirstOrDefault();
+            {               
 
                 // authentication successful so generate jwt token
                 var tokenHandler = new JwtSecurityTokenHandler();
@@ -58,12 +48,12 @@ namespace Backend.Application.Services
                             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                             new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                             new Claim(JwtRegisteredClaimNames.UniqueName, user.Fullname),
-                            new Claim("initialName", user.Fullname),
+                            new Claim("initialName", user.UserName),
                             new Claim("userId", user.Fullname + "|" + user.Id),
                             new Claim(JwtRegisteredClaimNames.Email, user.Email),
                             };
 
-                
+
 
                 TokenExpired = TokenExpired <= 0 ? TokenExpired = 60 : TokenExpired;
 

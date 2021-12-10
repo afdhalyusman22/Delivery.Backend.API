@@ -1,5 +1,5 @@
 ﻿using AutoMapper.Configuration;
-//using Backend.Application.Dto;
+using Backend.Application.Dto;
 using Backend.Core.Entities;
 
 namespace Backend.Application.Mappers
@@ -8,8 +8,11 @@ namespace Backend.Application.Mappers
     {
         public MappingProfile()
         {
-            //CreateMap<ToDoTask, ToDoTaskDTO>();
-            //CreateMap<ToDoTaskDTO, ToDoTask>();
+            CreateMap<OrderDetail, OrderPostDTO> ();
+            CreateMap<OrderPostDTO, OrderDetail>();
+
+            CreateMap<Order, OrdetListDTO>();
+            CreateMap<OrdetListDTO, Order>();
         }
     }
 }

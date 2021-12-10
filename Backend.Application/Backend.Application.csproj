@@ -13,8 +13,4 @@
     <ProjectReference Include="..\Backend.Core\Backend.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Dto\Order\" />
-  </ItemGroup>
-
 </Project>
