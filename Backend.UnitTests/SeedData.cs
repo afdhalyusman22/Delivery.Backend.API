@@ -12,62 +12,62 @@ namespace Backend.UnitTests
     {
 
         //ini ToDoListTask 1
-        public static readonly Order ToDoListTask1 = new Order
+        public static readonly Order order1 = new Order
         {
             Id = 1,
             OrderNo = Guid.NewGuid(),
-            UserId = "",
-            Status = "",
+            UserId = Guid.NewGuid().ToString(),
+            Status = "Order PickUp",
             IsDeleted = false,
         };
 
         //ini ToDoListTask 2
-        public static readonly Order ToDoListTask2 = new Order
+        public static readonly Order order2 = new Order
         {
             Id = 2,
             OrderNo = Guid.NewGuid(),
-            UserId = "",
-            Status = "",
+            UserId = Guid.NewGuid().ToString(),
+            Status = "Process at Warehouse",
             IsDeleted = false,
         };
 
         //ini ToDoListTask 3
-        public static readonly Order ToDoListTask3 = new Order
+        public static readonly Order order3 = new Order
         {
             Id = 3,
             OrderNo = Guid.NewGuid(),
-            UserId = "",
-            Status = "",
+            UserId = Guid.NewGuid().ToString(),
+            Status = "Order send to transit center",
             IsDeleted = false,
         };
 
         //ini ToDoListTask 4
-        public static readonly Order ToDoListTask4 = new Order
+        public static readonly Order order4 = new Order
         {
             Id = 4,
             OrderNo = Guid.NewGuid(),
-            UserId = "",
-            Status = "",
+            UserId = Guid.NewGuid().ToString(),
+            Status = "Order receive on transit center",
             IsDeleted = false,
         };
 
         //ini ToDoListTask 5
-        public static readonly Order ToDoListTask5 = new Order
+        public static readonly Order order5 = new Order
         {
             Id = 5,
             OrderNo = Guid.NewGuid(),
-            UserId = "",
-            Status = "",
+            UserId = Guid.NewGuid().ToString(),
+            Status = "Order On delivery to received",
             IsDeleted = false,
         };
 
         //ToDoListTaskForNew 
-        public static readonly Order ToDoListTaskForNew = new Order
+        public static readonly Order OrderForNew = new Order
         {
             Id = 6,
             OrderNo = Guid.NewGuid(),
-            UserId = "",
-            Status = "",
+            UserId = Guid.NewGuid().ToString(),
+            Status = "Order Pick Up",
             IsDeleted = false,
         };
 
@@ -76,8 +76,8 @@ namespace Backend.UnitTests
         {
             Id = 6,
             OrderNo = Guid.NewGuid(),
-            UserId = "",
-            Status = "",
+            UserId = Guid.NewGuid().ToString(),
+            Status = "Order Pick Up",
             IsDeleted = false,
         };
     }

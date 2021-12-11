@@ -93,7 +93,7 @@ namespace Backend.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("list")]
-        public async Task<IActionResult> ListOrderAdmin()
+        public async Task<IActionResult> ListOrder()
         {
             try
             {
